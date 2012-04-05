@@ -30,6 +30,8 @@
         {
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
+            this.lstProcesses = new System.Windows.Forms.ListBox();
+            this.cmdRefresh = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -52,11 +54,32 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
+            // lstProcesses
+            // 
+            this.lstProcesses.FormattingEnabled = true;
+            this.lstProcesses.Location = new System.Drawing.Point(12, 77);
+            this.lstProcesses.Name = "lstProcesses";
+            this.lstProcesses.Size = new System.Drawing.Size(259, 225);
+            this.lstProcesses.TabIndex = 2;
+            this.lstProcesses.DoubleClick += new System.EventHandler(this.lstProcesses_DoubleClick);
+            // 
+            // cmdRefresh
+            // 
+            this.cmdRefresh.Location = new System.Drawing.Point(12, 311);
+            this.cmdRefresh.Name = "cmdRefresh";
+            this.cmdRefresh.Size = new System.Drawing.Size(259, 23);
+            this.cmdRefresh.TabIndex = 3;
+            this.cmdRefresh.Text = "Refresh";
+            this.cmdRefresh.UseVisualStyleBackColor = true;
+            this.cmdRefresh.Click += new System.EventHandler(this.button3_Click);
+            // 
             // frmMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 78);
+            this.ClientSize = new System.Drawing.Size(284, 337);
+            this.Controls.Add(this.cmdRefresh);
+            this.Controls.Add(this.lstProcesses);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Name = "frmMenu";
@@ -69,5 +92,7 @@
 
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.ListBox lstProcesses;
+        private System.Windows.Forms.Button cmdRefresh;
     }
 }
