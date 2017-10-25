@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using FormTestApp;
 
 
 namespace ScreenCast
@@ -86,6 +87,32 @@ namespace ScreenCast
 
             var handle = p.MainWindowHandle;
             SetWindowPos(handle, 0, SizeForm.Location.X, SizeForm.Location.Y, SizeForm.Bounds.Width, SizeForm.Bounds.Height, SWP_NOZORDER | SWP_SHOWWINDOW);
+        }
+
+        private void lstProcesses_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        TestForm _AnnotationForm;
+ 
+        private void cmdAnnotate_Click(object sender, EventArgs e)
+        {
+            if (SizeForm == null)
+                return;
+
+            var annf = GetAnnotationForm();
+            annf.SetAnnotationArea(SizeForm);
+        }
+
+        private TestForm GetAnnotationForm()
+        {
+            if (_AnnotationForm == null)
+            {
+                _AnnotationForm = new TestForm();
+                _AnnotationForm.Show();
+            }
+            return _AnnotationForm;
         }
     }
 }

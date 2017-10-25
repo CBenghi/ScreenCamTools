@@ -42,6 +42,7 @@
             this.cmdSave = new System.Windows.Forms.Button();
             this.cmdOpen = new System.Windows.Forms.Button();
             this.cmdClose = new System.Windows.Forms.Button();
+            this.cmdDefault = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nudW)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudH)).BeginInit();
@@ -97,7 +98,7 @@
             // x1200ToolStripMenuItem
             // 
             this.x1200ToolStripMenuItem.Name = "x1200ToolStripMenuItem";
-            this.x1200ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.x1200ToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.x1200ToolStripMenuItem.Text = "1600 x 1200";
             this.x1200ToolStripMenuItem.Click += new System.EventHandler(this.x1200ToolStripMenuItem_Click);
             // 
@@ -170,7 +171,7 @@
             this.textBox1.Location = new System.Drawing.Point(166, 20);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(221, 261);
+            this.textBox1.Size = new System.Drawing.Size(446, 330);
             this.textBox1.TabIndex = 20;
             this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
@@ -198,7 +199,7 @@
             // 
             // cmdClose
             // 
-            this.cmdClose.Location = new System.Drawing.Point(38, 258);
+            this.cmdClose.Location = new System.Drawing.Point(40, 233);
             this.cmdClose.Name = "cmdClose";
             this.cmdClose.Size = new System.Drawing.Size(120, 23);
             this.cmdClose.TabIndex = 23;
@@ -206,11 +207,22 @@
             this.cmdClose.UseVisualStyleBackColor = true;
             this.cmdClose.Click += new System.EventHandler(this.cmdClose_Click);
             // 
+            // cmdDefault
+            // 
+            this.cmdDefault.Location = new System.Drawing.Point(38, 185);
+            this.cmdDefault.Name = "cmdDefault";
+            this.cmdDefault.Size = new System.Drawing.Size(120, 23);
+            this.cmdDefault.TabIndex = 24;
+            this.cmdDefault.Text = "Default";
+            this.cmdDefault.UseVisualStyleBackColor = true;
+            this.cmdDefault.Click += new System.EventHandler(this.cmdDefault_Click);
+            // 
             // frmBackGround
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(399, 300);
+            this.ClientSize = new System.Drawing.Size(624, 369);
+            this.Controls.Add(this.cmdDefault);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.cmdClose);
             this.Controls.Add(this.cmdOpen);
@@ -251,6 +263,7 @@
         private System.Windows.Forms.Button cmdSave;
         private System.Windows.Forms.Button cmdOpen;
         private System.Windows.Forms.Button cmdClose;
+        private System.Windows.Forms.Button cmdDefault;
 
     }
 }

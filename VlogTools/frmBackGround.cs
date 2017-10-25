@@ -231,5 +231,11 @@ namespace ScreenCast
         {
             LoadDefault();
         }
+
+        private void cmdDefault_Click(object sender, EventArgs e)
+        {
+            nudW.Value = 1280;
+            nudH.Value = 720;
+        }
     }
 }

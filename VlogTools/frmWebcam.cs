@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+using Touchless.Vision;
 using Touchless.Vision.Camera;
 
 namespace ScreenCast
@@ -38,13 +41,16 @@ namespace ScreenCast
             thrashOldCamera();
         }
 
+        
+
         private void btnStop_Click(object sender, EventArgs e)
         {
+            timer1.Enabled = false;
             thrashOldCamera();
+            cmdFixVideo_Click(null, null);
         }
 
         private CameraFrameSource _frameSource;
-        private static Bitmap _latestFrame;
 
         private void btnStart_Click(object sender, EventArgs e)
         {
@@ -52,23 +58,26 @@ namespace ScreenCast
             if (_frameSource != null && _frameSource.Camera == comboBoxCameras.SelectedItem)
                 return;
 
+            timer1.Enabled = true;
+            tickCounter = (int)nudSecondsGap.Value - 1;
+
             thrashOldCamera();
-            startCapturing();
+            Size sz = new System.Drawing.Size(1024, 768);
+            startCapturing(sz);
         }
 
-        private void startCapturing()
+        private void startCapturing(Size capSize)
         {
             try
             {
                 Camera c = (Camera)comboBoxCameras.SelectedItem;
-                c.CaptureWidth = 320;
-                c.CaptureHeight = 240;
+                c.CaptureWidth = capSize.Width;
+                c.CaptureHeight = capSize.Height;
                 setFrameSource(new CameraFrameSource(c));
-                _frameSource.Camera.CaptureWidth = 320;
-                _frameSource.Camera.CaptureHeight = 240;
-                _frameSource.Camera.Fps = 20;
+                _frameSource.Camera.CaptureWidth = capSize.Width;
+                _frameSource.Camera.CaptureHeight = capSize.Height;
+                _frameSource.Camera.Fps = 5;
                 _frameSource.NewFrame += OnImageCaptured;
-
                 // pictureBoxDisplay.Paint += new PaintEventHandler(drawLatestImage);
                 _frameSource.StartFrameCapture();
             }
@@ -78,6 +87,8 @@ namespace ScreenCast
                 MessageBox.Show(ex.Message);
             }
         }
+
+        private String NextFrameCapturePath = "";
 
         public void OnImageCaptured(Touchless.Vision.Contracts.IFrameSource frameSource, Touchless.Vision.Contracts.Frame frame, double fps)
         {
@@ -98,6 +109,13 @@ namespace ScreenCast
             {
                 pictureBoxDisplay.Image = frame.Image; // _latestFrame = frame.Image;
                 pictureBoxDisplay.Invalidate();
+                if (NextFrameCapturePath != "")
+                {
+                    Bitmap b = new Bitmap(frame.Image);
+                    b.SaveJPG(NextFrameCapturePath, 80);
+                    // b.Save(NextFrameCapturePath);
+                    NextFrameCapturePath = "";
+                }
             }
             catch
             {
@@ -148,24 +166,6 @@ namespace ScreenCast
         }
 
         //
-
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            if (_frameSource == null)
-                return;
-
-            Bitmap current = (Bitmap)_latestFrame.Clone();
-            using (SaveFileDialog sfd = new SaveFileDialog())
-            {
-                sfd.Filter = "*.bmp|*.bmp";
-                if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    current.Save(sfd.FileName);
-                }
-            }
-
-            current.Dispose();
-        }
 
         private void btnConfig_Click(object sender, EventArgs e)
         {
@@ -262,6 +262,70 @@ namespace ScreenCast
         private void button2_Click(object sender, EventArgs e)
         {
             _FixRatio = true;
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            tickCounter = (int)nudSecondsGap.Value - 1;
+        }
+
+        int tickCounter = 0;
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            tickCounter += 1;
+            lblticks.Text = tickCounter.ToString();
+            if (tickCounter == (int)nudSecondsGap.Value)
+            {
+                if (Directory.Exists(txtCaptureFolder.Text))
+                {
+                    NextFrameCapturePath = Path.Combine(txtCaptureFolder.Text,
+                        DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".jpg");
+                }
+                tickCounter = -1;
+            }
+        }
+
+        private void nudSecondsGap_ValueChanged(object sender, EventArgs e)
+        {
+            tickCounter = (int)nudSecondsGap.Value - 1;
+        }
+
+        private void cmdFixVideo_Click(object sender, EventArgs e)
+        {
+            /*
+            pictureBoxDisplay = null;
+
+            this.pictureBoxDisplay = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxDisplay)).BeginInit();
+            this.SuspendLayout();
+
+            this.pictureBoxDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBoxDisplay.Location = new System.Drawing.Point(0, 0);
+            this.pictureBoxDisplay.Margin = new System.Windows.Forms.Padding(4);
+            this.pictureBoxDisplay.Name = "pictureBoxDisplay";
+            this.pictureBoxDisplay.Size = new System.Drawing.Size(853, 591);
+            this.pictureBoxDisplay.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBoxDisplay.TabIndex = 13;
+            this.pictureBoxDisplay.TabStop = false;
+            this.pictureBoxDisplay.DoubleClick += new System.EventHandler(this.pictureBoxDisplay_DoubleClick);
+            this.pictureBoxDisplay.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Dragging_MouseDown);
+            this.pictureBoxDisplay.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Dragging_MouseMove);
+
+            this.Controls.Add(this.pictureBoxDisplay);
+            this.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxDisplay)).EndInit();
+
+            */
+            ResetExceptionState(pictureBoxDisplay);
+        }
+
+        void ResetExceptionState(Control control)
+        {
+            typeof(Control).InvokeMember("SetState", BindingFlags.NonPublic |
+              BindingFlags.InvokeMethod | BindingFlags.Instance, null,
+              control, new object[] { 0x400000, false });
         }
     }
 }
